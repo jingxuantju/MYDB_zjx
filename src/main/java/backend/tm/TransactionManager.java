@@ -13,23 +13,29 @@ import java.nio.channels.FileChannel;
 
 public interface TransactionManager {
     long begin();                       // 开启一个新事务
+
     void commit(long xid);              // 提交一个事务
+
     void abort(long xid);               // 取消一个事务
+
     boolean isActive(long xid);         // 查询一个事务的状态是否是正在进行的状态
+
     boolean isCommitted(long xid);      // 查询一个事务的状态是否是已提交
+
     boolean isAborted(long xid);        // 查询一个事务的状态是否是已取消
+
     void close();                       // 关闭TM
 
     public static TransactionManagerImpl create(String path) {
-        File f = new File(path+TransactionManagerImpl.XID_SUFFIX);
+        File f = new File(path + TransactionManagerImpl.XID_SUFFIX);
         try {
-            if(!f.createNewFile()) {
+            if (!f.createNewFile()) {
                 Panic.panic(Error.FileExistsException);
             }
         } catch (Exception e) {
             Panic.panic(e);
         }
-        if(!f.canRead() || !f.canWrite()) {
+        if (!f.canRead() || !f.canWrite()) {
             Panic.panic(Error.FileCannotRWException);
         }
 
@@ -55,11 +61,11 @@ public interface TransactionManager {
     }
 
     public static TransactionManagerImpl open(String path) {
-        File f = new File(path+TransactionManagerImpl.XID_SUFFIX);
-        if(!f.exists()) {
+        File f = new File(path + TransactionManagerImpl.XID_SUFFIX);
+        if (!f.exists()) {
             Panic.panic(Error.FileNotExistsException);
         }
-        if(!f.canRead() || !f.canWrite()) {
+        if (!f.canRead() || !f.canWrite()) {
             Panic.panic(Error.FileCannotRWException);
         }
 
